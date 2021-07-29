@@ -1,6 +1,8 @@
 package com.sample.controller;
 
+import com.sample.entity.Course;
 import com.sample.entity.Teacher;
+import com.sample.service.CourseService;
 import com.sample.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -21,6 +24,9 @@ public class DemoController {
 
     @Autowired
     private TeacherService teacherService;
+
+    @Autowired
+    private CourseService courseService;
 
 
     @GetMapping("/")
@@ -63,5 +69,54 @@ public class DemoController {
         teacherService.saveOrUpdate(teacher);
 
         return "redirect:/teachers/list";
+    }
+
+    @GetMapping("/teachers/courses")
+    public String showTeacherCourses(@RequestParam("teacherId") int id, Model model) {
+        List<Course> courses = courseService.getCoursesByTeacherId(id);
+        model.addAttribute("courses", courses);
+        model.addAttribute("teacherId", id);
+
+        return "courses-list";
+    }
+
+    @GetMapping("/teachers/courses/addCourse")
+    public String showAddCourseForm(@RequestParam("teacherId") int teacherId, Model model) {
+        Course course = new Course();
+        Teacher teacher = teacherService.getTeacherById(teacherId);
+        course.setTeacher(teacher);
+        model.addAttribute("course", course);
+
+        return "course-form";
+    }
+
+    @PostMapping("/teachers/courses/save")
+    public String saveCourse(@ModelAttribute("course") Course course, @RequestParam("teacherId") int teacherId, RedirectAttributes redirectAttributes) {
+        Teacher teacher = teacherService.getTeacherById(teacherId);
+        course.setTeacher(teacher);
+        courseService.saveOrUpdate(course);
+
+        redirectAttributes.addAttribute("teacherId", teacherId);
+        return "redirect:/teachers/courses";
+    }
+
+    @GetMapping("teachers/courses/update")
+    public String showCourseUpdateForm(@RequestParam("courseId") int id, Model model) {
+
+        Course course = courseService.getCourseById(id);
+        model.addAttribute("course", course);
+
+        return "course-form";
+    }
+
+    @GetMapping("/teachers/courses/delete")
+    public String deleteCourse(@RequestParam("courseId") int id, Model model, RedirectAttributes redirectAttribute) {
+        Course course = courseService.getCourseById(id);
+        Teacher teacher = course.getTeacher();
+        redirectAttribute.addAttribute("teacherId", teacher.getId());
+
+        courseService.deleteCourse(id);
+
+        return "redirect:/teachers/courses";
     }
 }
