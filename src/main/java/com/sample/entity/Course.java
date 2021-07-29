@@ -23,6 +23,9 @@ public class Course {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
+    public Course() {
+    }
+
     public int getId() {
         return id;
     }
