@@ -40,10 +40,8 @@ public class TeacherDAOImpl implements TeacherDAO {
     public void deleteTeacher(int id) {
         Session session = sessionFactory.getCurrentSession();
 
-        Query deleteQuery = session.createQuery("delete from Teacher where id=:teacher_id");
-        deleteQuery.setParameter("teacher_id", id);
-
-        deleteQuery.executeUpdate();
+        Teacher teacher = session.get(Teacher.class, id);
+        session.delete(teacher);
     }
 
     @Override
