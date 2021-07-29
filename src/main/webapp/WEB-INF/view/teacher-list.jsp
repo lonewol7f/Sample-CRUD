@@ -29,7 +29,7 @@
 
 <div class="container">
     <div class="mt-5 mb-5">
-        <%-- put new button: add customer --%>
+        <%-- put new button: add course --%>
         <input type="button" value="Add Teacher" onclick="window.location.href='addForm'; return false;"
                class="btn btn-primary"/>
     </div>
@@ -40,33 +40,40 @@
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email Name</th>
+                <th>Courses</th>
                 <th>Action</th>
                 </thead>
 
 
-                    <%-- Loop over and print customers --%>
+                    <%-- Loop over and print teachers --%>
                 <c:forEach var="tempTeacher" items="${teachers}">
 
-                    <%-- construct an 'update' link with xustomer id --%>
+                    <%-- construct an 'update' link with teacher id --%>
                     <c:url var="updateLink" value="/teachers/update">
                         <c:param name="teacherId" value="${tempTeacher.id}"/>
                     </c:url>
 
-                    <%-- construct an 'delete' link with xustomer id --%>
+                    <%-- construct an 'delete' link with teacher id --%>
                     <c:url var="deleteLink" value="/teachers/delete">
                         <c:param name="teacherId" value="${tempTeacher.id}"/>
                     </c:url>
+
+                    <c:url var="coursesLink" value="/teachers/courses">
+                        <c:param name="teacherId" value="${tempTeacher.id}"/>
+                    </c:url>
+
 
                     <tr>
                         <td>${tempTeacher.firstName}</td>
                         <td>${tempTeacher.lastName}</td>
                         <td>${tempTeacher.email}</td>
+                        <td><a href="${coursesLink}">Courses</a></td>
                         <td>
                                 <%-- display the update link --%>
                             <a href="${updateLink}">Update</a>
                             |
-                            <a href="${deleteLink}"
-                               onclick="if (!(confirm('Are you sure, You want to delete this customer?'))) return false">Delete</a>
+                            <a href="${deleteLink}"   <%-- delete link --%>
+                               onclick="if (!(confirm('Are you sure, You want to delete this teacher?'))) return false">Delete</a>
                         </td>
                     </tr>
                 </c:forEach>
