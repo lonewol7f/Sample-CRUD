@@ -85,6 +85,11 @@
             </div>
         </c:if>
     </div>
+    <div class="mt-5 mb-5">
+        <%-- put new button: Download --%>
+        <input type="button" value="Download Report" onclick="window.location.href='pdf'; return false;"
+               class="btn btn-primary"/>
+    </div>
 </div>
 
 </body>
